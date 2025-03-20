@@ -27,6 +27,27 @@ void Izpis_Stevil(int* polje, unsigned int velikost) {
 		output << polje[i] << ' ';
 }
 
+void binary_radix_sort(vector<int>& A){
+    const int bits = 8;
+    vector<int> B(A.size());
+
+    for(int k= 0; k < bits; k++){
+        int C[2] = {0};
+
+        for(int i = 0; i < A.size(); i++){
+            C[(A[i] >> k)& 1]++;
+        }
+
+        C[1] += C[0];
+
+        for(int i = A.size()-1; i >= 0; i--){
+            B[--C[(A[i] >> k) & 1]] = A[i];
+        }
+
+        swap(A,B);
+    }
+}
+
 int main(int argc, const char* argv[]) {
 	vector<int> A;
 
@@ -34,10 +55,8 @@ int main(int argc, const char* argv[]) {
 	if (!Branje_Stevil(A, argv[2])) return 0;
 
 	if (argv[1][0] == '0') {
-		
 
-        
-
+        binary_radix_sort(A);
 
 	}
 	
