@@ -43,7 +43,7 @@ jobs:
       - uses: actions/checkout@v2
       
       - name: Download error file
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: error-file
           
