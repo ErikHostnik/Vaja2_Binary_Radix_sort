@@ -3,7 +3,7 @@ name: Deploy Radix Sort to Docker Hub
 on:
   workflow_run:
     workflows: ["Test Radix Sort Implementation"]
-    branches: [main]
+    branches: [master]
     types:
       - completed
 
