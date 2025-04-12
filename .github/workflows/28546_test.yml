@@ -16,7 +16,7 @@ jobs:
       - name: Check for test files
         id: check_tests
         run: |
-          if [ -f "tests/test_radix_sort.sh" ]; then
+          if [ -f "tests/test_radix_sort.py" ]; then
             echo "exists=true" >> $GITHUB_OUTPUT
           else
             echo "::error::Test file not found!"
@@ -40,16 +40,25 @@ jobs:
       matrix:
         compiler: [g++, clang++]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
       
+      - name: Download error file
+        uses: actions/download-artifact@v2
+        with:
+          name: error-file
+          
+      - name: Check for errors
+        run: |
+          if [ -f "napaka.txt" ]; then
+            echo "::error::Previous step failed!"
+            exit 1
+          fi
+          
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y ${{ matrix.compiler }}
-        
+        run: sudo apt-get update && sudo apt-get install -y ${{ matrix.compiler }} python3
+
       - name: Compile radix sort
         run: ${{ matrix.compiler }} src/radix_sort.cpp -o radix_sort -std=c++11
           
-      - name: Make test script executable
-        run: chmod +x tests/test_radix_sort.sh
-          
-      - name: Run tests
-        run: ./tests/test_radix_sort.sh
+      - name: Run Python test
+        run: python3 tests/test_radix_sort.py
