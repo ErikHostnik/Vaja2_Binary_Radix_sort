@@ -1,9 +1,9 @@
 #include <fstream>
 #include <vector>
 #include <iostream>
-using namespace std; //test test
+using namespace std; //test test1
 
-bool Branje_Stevil(vector<int> &vec, const char s[]) {
+bool Branje_Stevil(vector<int> &vec, const char s[]) { //test test2
 	ifstream input(s);
 	int st;
 

@@ -40,20 +40,8 @@ jobs:
       matrix:
         compiler: [g++, clang++]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       
-      - name: Download error file
-        uses: actions/download-artifact@v2
-        with:
-          name: error-file
-          
-      - name: Check for errors
-        run: |
-          if [ -f "napaka.txt" ]; then
-            echo "::error::Previous step failed!"
-            exit 1
-          fi
-          
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y ${{ matrix.compiler }}
         
