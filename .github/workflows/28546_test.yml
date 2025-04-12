@@ -1,0 +1,67 @@
+name: Test Radix Sort Implementation
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  check_tests_exist:
+    name: Check if test files exist
+    runs-on: self-hosted
+    outputs:
+      tests_exist: ${{ steps.check_tests.outputs.exists }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check for test files
+        id: check_tests
+        run: |
+          if [ -f "tests/test_radix_sort.sh" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "::error::Test file not found!"
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "Test files missing" > napaka.txt
+          fi
+          
+      - name: Upload error file
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: error-file
+          path: napaka.txt
+
+  run_tests:
+    name: Run Radix Sort Tests
+    needs: check_tests_exist
+    if: ${{ needs.check_tests_exist.outputs.tests_exist == 'true' }}
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        compiler: [g++, clang++]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download error file
+        uses: actions/download-artifact@v4
+        with:
+          name: error-file
+          
+      - name: Check for errors
+        run: |
+          if [ -f "napaka.txt" ]; then
+            echo "::error::Previous step failed!"
+            exit 1
+          fi
+          
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y ${{ matrix.compiler }}
+        
+      - name: Compile radix sort
+        run: ${{ matrix.compiler }} src/radix_sort.cpp -o radix_sort -std=c++11
+          
+      - name: Make test script executable
+        run: chmod +x tests/test_radix_sort.sh
+          
+      - name: Run tests
+        run: ./tests/test_radix_sort.sh
