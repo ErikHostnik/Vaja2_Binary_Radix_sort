@@ -11,7 +11,7 @@ jobs:
     outputs:
       tests_exist: ${{ steps.check_tests.outputs.exists }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
       
       - name: Check for test files
         id: check_tests
@@ -26,7 +26,7 @@ jobs:
           
       - name: Upload error file
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v2
         with:
           name: error-file
           path: napaka.txt
@@ -40,10 +40,10 @@ jobs:
       matrix:
         compiler: [g++]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
       
       - name: Download error file
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v2
         with:
           name: error-file
           
