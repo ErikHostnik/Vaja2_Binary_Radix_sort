@@ -11,7 +11,7 @@ jobs:
     outputs:
       tests_exist: ${{ steps.check_tests.outputs.exists }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
       
       - name: Check for test files
         id: check_tests
@@ -37,7 +37,7 @@ jobs:
     if: ${{ needs.check_tests_exist.outputs.tests_exist == 'true' }}
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
           
       - name: Check for errors
