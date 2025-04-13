@@ -12,8 +12,8 @@ with open("out.txt") as f:
     output = f.read().strip()
 
 if output == expected_output:
-    print("✅ Test passed")
+    print(" Test passed")
     exit(0)
 else:
-    print(f"❌ Test failed: expected '{expected_output}', got '{output}'")
+    print(f" Test failed: expected '{expected_output}', got '{output}'")
     exit(1)
