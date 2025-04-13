@@ -2,7 +2,7 @@ name: Test Radix Sort Implementation
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master ]  
 
 jobs:
   check_tests_exist:
@@ -12,7 +12,7 @@ jobs:
       tests_exist: ${{ steps.check_tests.outputs.exists }}
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Check for test files
         id: check_tests
         run: |
@@ -23,7 +23,7 @@ jobs:
             echo "exists=false" >> $GITHUB_OUTPUT
             echo "Test files missing" > napaka.txt
           fi
-          
+
       - name: Upload error file
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
@@ -36,10 +36,12 @@ jobs:
     needs: check_tests_exist
     if: ${{ needs.check_tests_exist.outputs.tests_exist == 'true' }}
     runs-on: self-hosted
+    strategy:
+      matrix:
+        compiler: [ "g++", "clang++" ]
     steps:
       - uses: actions/checkout@v3
 
-          
       - name: Check for errors
         run: |
           if [ -f "napaka.txt" ]; then
@@ -48,7 +50,7 @@ jobs:
           fi
 
       - name: Compile radix sort (timeout 2 min)
-        run: g++ src/radix_sort.cpp -o radix_sort -std=c++11 -Wall -Wextra
+        run: ${{ matrix.compiler }} src/radix_sort.cpp -o radix_sort -std=c++11 -Wall -Wextra
         timeout-minutes: 2
 
       - name: Run Python test
