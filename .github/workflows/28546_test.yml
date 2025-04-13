@@ -40,13 +40,13 @@ jobs:
       matrix:
         compiler: [ g++, clang++ ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       
       - name: Download error file
-        if: steps.check_tests.outcome == 'failure'
         uses: actions/download-artifact@v3
         with:
           name: error-file
+        continue-on-error: true
           
       - name: Check for errors
         run: |
