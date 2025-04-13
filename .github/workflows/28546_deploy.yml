@@ -3,49 +3,22 @@ name: Deploy Radix Sort to Docker Hub
 on:
   workflow_run:
     workflows: ["Test Radix Sort Implementation"]
-    branches: [master]
     types:
       - completed
 
 jobs:
   deploy:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    name: Build and Push Docker Image
     runs-on: self-hosted
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Docker config
-        run: |
-          mkdir -p /tmp/docker-config
-          echo '{ "credsStore": "" }' > /tmp/docker-config/config.json
-        # nastavimo DOCKER_CONFIG env var, da Docker uporablja našo config lokacijo
-        env:
-          DOCKER_CONFIG: /tmp/docker-config
-      
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
-        env:
-          DOCKER_CONFIG: /tmp/docker-config
-          
+      - name: Docker login
+        run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
       - name: Build Docker image
-        run: docker build -t radix-sort .
-        env:
-          DOCKER_CONFIG: /tmp/docker-config
-          
-      - name: Tag Docker image
-        run: |
-          docker tag radix-sort ${{ secrets.DOCKER_HUB_USERNAME }}/radix-sort:latest
-          docker tag radix-sort ${{ secrets.DOCKER_HUB_USERNAME }}/radix-sort:${{ github.sha }}
-        env:
-          DOCKER_CONFIG: /tmp/docker-config
-          
-      - name: Push Docker images
-        run: |
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/radix-sort:latest
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/radix-sort:${{ github.sha }}
-        env:
-          DOCKER_CONFIG: /tmp/docker-config
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/radix-sort:latest .
+
+      - name: Push Docker image
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/radix-sort:latest
