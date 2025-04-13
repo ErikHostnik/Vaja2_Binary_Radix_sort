@@ -20,7 +20,7 @@ bool Branje_Stevil(vector<int> &vec, const char s[]) { //test test2
 	return true;
 }
 
-void Izpis_Stevil(int* polje, unsigned int velikost) {
+void Izpis_Stevil(int* polje, unsigned int velikost) {  //test test 5
 	ofstream output("out.txt");
 
 	for (int i = 0; i<velikost; i++)
