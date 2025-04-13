@@ -11,7 +11,7 @@ bool Branje_Stevil(vector<int> &vec, const char s[]) { //test test2
 		return false;
 	}
 
-	while (!input.eof()) {
+	while (!input.eof()) { //test 5
 		input >> st;
 		vec.push_back(st);
 		while (isspace(input.peek())) input.get(); //test est 4
