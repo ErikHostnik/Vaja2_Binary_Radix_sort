@@ -26,7 +26,7 @@ jobs:
           
       - name: Upload error file
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: error-file
           path: napaka.txt
@@ -38,12 +38,12 @@ jobs:
     runs-on: self-hosted
     strategy:
       matrix:
-        compiler: [g++]
+        compiler: [g++, clang++]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
       
       - name: Download error file
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: error-file
           
