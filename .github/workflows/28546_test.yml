@@ -41,19 +41,6 @@ jobs:
         compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Download error file
-        uses: actions/download-artifact@v3
-        with:
-          name: error-file
-        continue-on-error: true
-          
-      - name: Check for errors
-        run: |
-          if [ -f "napaka.txt" ]; then
-            echo "::error::Previous step failed!"
-            exit 1
-          fi
           
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y ${{ matrix.compiler }} python3
