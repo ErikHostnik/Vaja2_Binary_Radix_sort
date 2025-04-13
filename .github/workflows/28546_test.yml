@@ -36,17 +36,29 @@ jobs:
     needs: check_tests_exist
     if: ${{ needs.check_tests_exist.outputs.tests_exist == 'true' }}
     runs-on: self-hosted
-    strategy:
-      matrix:
-        compiler: [ g++, clang++ ]
     steps:
       - uses: actions/checkout@v4
-          
-      - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y ${{ matrix.compiler }} python3
 
-      - name: Compile radix sort
-        run: ${{ matrix.compiler }} src/radix_sort.cpp -o radix_sort -std=c++11
+      - name: Download error file (optional)
+        if: always()
+        uses: actions/download-artifact@v3
+        with:
+          name: error-file
+        continue-on-error: true
           
+      - name: Check for errors
+        run: |
+          if [ -f "napaka.txt" ]; then
+            echo "::error::Previous step failed!"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y g++ python3
+
+      - name: Compile radix sort (timeout 2 min)
+        run: g++ src/radix_sort.cpp -o radix_sort -std=c++11 -Wall -Wextra
+        timeout-minutes: 2
+
       - name: Run Python test
         run: python3 tests/test_radix_sort.py
