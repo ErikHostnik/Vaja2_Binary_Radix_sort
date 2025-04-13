@@ -7,7 +7,7 @@ bool Branje_Stevil(vector<int> &vec, const char s[]) { //test test2
 	ifstream input(s);
 	int st;
 
-	if (!input.is_open()) {
+	if (!input.is_open()) {   //test test3
 		return false;
 	}
 
