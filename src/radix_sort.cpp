@@ -3,7 +3,7 @@
 #include <iostream>
 using namespace std; 
 
-bool Branje_Stevil(vector<int> &vec, const char s[]) {
+bool Branje_Stevil(vector<int> &vec, const char s[]) { //Test
 	ifstream input(s);
 	int st;
 
