@@ -39,12 +39,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download error file (optional)
-        if: always()
-        uses: actions/download-artifact@v3
-        with:
-          name: error-file
-        continue-on-error: true
           
       - name: Check for errors
         run: |
