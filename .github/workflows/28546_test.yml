@@ -22,6 +22,7 @@ jobs:
             echo "::error::Test file not found!"
             echo "exists=false" >> $GITHUB_OUTPUT
             echo "Test files missing" > napaka.txt
+            exit 1
           fi
 
       - name: Upload error file
